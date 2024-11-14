@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 const LoginPage = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,11 +11,10 @@ const LoginPage = ({ navigation }) => {
   const handleLogin = async () => {
     setErrorMessage(''); // Clear previous error message
     try {
-      const response = await axios.post('http://localhost:5000/login', { username, password });
-      if (response.data.success) {
-        // Navigate to WelcomePage if login is successful
-        navigation.navigate('WelcomePage', { username: response.data.username });
-      } else {
+      const response = await axios.post('http://192.168.1.4:8000/login', { username, password });
+      if (!response.data.success) {
+        
+      
         // Display the error message if login fails
         setErrorMessage(response.data.message || 'Username not found');
       }
@@ -60,10 +60,10 @@ const LoginPage = ({ navigation }) => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Log In</Text>
+            <Link href="HelloPage">Login</Link>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUpPage')}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+            <Link href="SignUpPage">Sign Up</Link>
           </TouchableOpacity>
         </View>
       </View>

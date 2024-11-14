@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
-const SignUpPage = ({ navigation }) => {
+const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,12 +12,12 @@ const SignUpPage = ({ navigation }) => {
   const handleSignUp = async () => {
     setErrorMessage(''); // Clear any previous error message
     try {
-      const response = await axios.post('http://localhost:5000/signup', { username, password });
+      const response = await axios.post('http://192.168.1.4:8000/', { username, password });
       if (response.data.success) {
-        navigation.navigate('WelcomePage', { username: response.data.username });
+        // Navigate to LoginPage on successful signup
+        Alert.alert('Success', 'User registered successfully! Please log in.');
       } else {
-        // Display the error message returned from the server
-        setErrorMessage(response.data.message);
+        setErrorMessage(response.data.message); // Show error message if username exists
       }
     } catch (error) {
       console.error(error);
@@ -35,7 +36,7 @@ const SignUpPage = ({ navigation }) => {
           <FontAwesome name="user" size={20} color="#888" style={styles.icon} />
           <TextInput
             style={styles.input}
-            placeholder="Email"
+            placeholder="Username"
             placeholderTextColor="#888"
             value={username}
             onChangeText={setUsername}
@@ -62,6 +63,9 @@ const SignUpPage = ({ navigation }) => {
           <TouchableOpacity style={styles.button} onPress={handleSignUp}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
+          <Link href="/LoginPage" style={styles.linkButton}>
+            <Text style={styles.buttonText}>            Login</Text>
+          </Link>
         </View>
       </View>
     </View>
@@ -129,6 +133,14 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     backgroundColor: '#444',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  linkButton: {
+    flex: 1,
+    backgroundColor: '#555',
     paddingVertical: 12,
     borderRadius: 10,
     marginHorizontal: 5,
